@@ -1,6 +1,7 @@
 from llama_cpp import Llama
 import math
 import os
+import csv
 import argparse
 from pathlib import Path
 
@@ -133,44 +134,55 @@ def write_summary(run_id, mode, A_res, B_res, out_path: Path):
     if (dA is not None) and (dB is not None):
         order_effect = dA - dB
 
-    with out_path.open("w", encoding="utf-8") as f:
-        f.write(f"=== RUN {run_id} ({mode}) ===\n\n")
+    out_path = Path(out_path)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
 
-        # -------------------------
-        # A to B SEQUENCE
-        # -------------------------
-        if HbA is not None:
-            f.write("A to B\n")
-            f.write(f"  H_before:  {HbA:.6f} bits\n")
-            f.write(f"  H_after:   {HaA:.6f} bits\n")
-            f.write(f"  d_H:        {dA:.6f} bits\n")
-            f.write(f"  Forced:    {tokA!r}\n\n")
+    # Optional: include top token after forcing as quick sanity signal
+    top_tok_A = distA[0][0] if distA else None
+    top_p_A   = distA[0][1] if distA else None
 
-            if distA is not None:
-                f.write("  Top tokens after forcing A:\n")
-                for tok, p, lp in distA[:TOPN]:
-                    f.write(f"    {tok!r}: p={p:.4f}, logp={lp:.4f}\n")
-                f.write("\n")
+    top_tok_B = distB[0][0] if distB else None
+    top_p_B   = distB[0][1] if distB else None
 
-        # -------------------------
-        # B to A SEQUENCE
-        # -------------------------
-        if HbB is not None:
-            f.write("B to A\n")
-            f.write(f"  H_before:  {HbB:.6f} bits\n")
-            f.write(f"  H_after:   {HaB:.6f} bits\n")
-            f.write(f"  d_H:        {dB:.6f} bits\n")
-            f.write(f"  Forced:    {tokB!r}\n\n")
+    fieldnames = [
+        "run_id", "mode",
 
-            if distB is not None:
-                f.write("  Top tokens after forcing B:\n")
-                for tok, p, lp in distB[:TOPN]:
-                    f.write(f"    {tok!r}: p={p:.4f}, logp={lp:.4f}\n")
-                f.write("\n")
+        "H_before_A2B_bits", "H_after_A2B_bits", "delta_H_A2B_bits", "forced_token_A2B",
+        "top_token_after_A2B", "top_token_p_after_A2B",
 
-        if order_effect is not None:
-            f.write(f"Order Effect (d_H_AB − d_H_BA): {order_effect:.6f} bits\n")
+        "H_before_B2A_bits", "H_after_B2A_bits", "delta_H_B2A_bits", "forced_token_B2A",
+        "top_token_after_B2A", "top_token_p_after_B2A",
 
+        "order_effect_bits",
+    ]
+
+    row = {
+        "run_id": run_id,
+        "mode": mode,
+
+        "H_before_A2B_bits": HbA,
+        "H_after_A2B_bits": HaA,
+        "delta_H_A2B_bits": dA,
+        "forced_token_A2B": tokA,
+
+        "top_token_after_A2B": top_tok_A,
+        "top_token_p_after_A2B": top_p_A,
+
+        "H_before_B2A_bits": HbB,
+        "H_after_B2A_bits": HaB,
+        "delta_H_B2A_bits": dB,
+        "forced_token_B2A": tokB,
+
+        "top_token_after_B2A": top_tok_B,
+        "top_token_p_after_B2A": top_p_B,
+
+        "order_effect_bits": order_effect,
+    }
+
+    with out_path.open("w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=fieldnames)
+        w.writeheader()
+        w.writerow(row)
 
 # ================================================================
 # RUN PROTOCOLS
@@ -204,7 +216,7 @@ else:
 # ================================================================
 # WRITE SUMMARY
 # ================================================================
-summary_path = OUT_DIR / f"summary_{RUN_ID}_{MODE}.txt"
+summary_path = OUT_DIR / f"summary_{RUN_ID}_{MODE}.csv"
 
 write_summary(
     RUN_ID,
@@ -216,6 +228,7 @@ write_summary(
 
 print("Finished run", RUN_ID, "MODE=", MODE)
 print("Wrote summary to", str(summary_path))
+
 
 
 
