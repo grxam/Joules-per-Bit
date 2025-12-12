@@ -50,7 +50,7 @@ Python Libraries:
    ```
 2. Set required environment variables
    ```
-   $env:LLAMA_MODEL_PATH="C:\path\to\models\Meta-Llama-3-8B-Instruct-Q4_K_M.gguf"
+   $env:LLAMA_MODEL_PATH="C:\data\raw\summaries\Meta-Llama-3-8B-Instruct-Q4_K_M.gguf"
    $env:LLAMA_OUT_DIR="logs"
    ```
 3. Run the experiment:
