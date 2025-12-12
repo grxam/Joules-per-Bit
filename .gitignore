@@ -29,7 +29,7 @@ results/
 *.csv
 summary_*.txt
 # Raw experimental data (machine-specific, large)
-data/raw/
+data/raw/power/
 
 # -------------------------------------------------
 # IDE / OS files
