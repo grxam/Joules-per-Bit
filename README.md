@@ -1,7 +1,7 @@
 # CPU-only Llama 3 (8B-Instruct, GGUF) + Power Telemetry (Windows)
-A lightweight experimental framework for measuring how the order of forced token interventions affect language model output probabilties and entropy.
+A lightweight experimental framework for measuring how the order of forced token interventions affects language-model output probabilities and entropy.
 ## Description
-This project implements a framework for measuring how forced tokens affect the output distributions of language models. It compares two execution orders (A &rarr; B and B &rarr; A) by probing token probabilities and entropy before and after interventions. The framework record per-run statistics and supports reproducible, order seperated analysis. Collected results are logged to support statistical analysis and reporting.
+This project implements a framework for measuring how forced tokens affect the output distributions of language models. It compares two execution orders (A &rarr; B and B &rarr; A) by probing token probabilities and entropy before and after interventions. The framework records per-run statistics as CSV summaries and supports reproducible, order-separated analysis.
 ## Getting Started
 ### Dependencies
 * Windows 11
@@ -62,7 +62,8 @@ Python Libraries:
 * ```A2B``` - Run A &rarr; B protocol
 * ```B2A``` - Run B &rarr; A protocol
 * ```BOTH``` - Run both protocols
-Output summaries are written to the specified output directory
+Each run produces a single CSV summary file named `summary_<RUN_ID>_<MODE>.csv`.
+
 
 ### Power Measurement (Intel Power Gadget)
 Power measurments were collected using Intel Power Gadget on Windows
@@ -86,7 +87,8 @@ Run the following command to collect an idle baseline:
 ```
 & "C:\Program Files\Intel\Power Gadget 3.6\PowerLog3.0.exe" -resolution 50 -file logs\idle.csv -cmd "python -c ""import time; time.sleep(30)"""
 ```
-This produces: ```logs/idle.csv```
+This produces: 
+```logs/idle.csv```
 Idle power is subtracted during aggregation to compute net power and net energy.
 
 ### Aggregating Results
