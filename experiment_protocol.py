@@ -62,8 +62,8 @@ parser.add_argument(
 )
 parser.add_argument(
     "--out-dir",
-    default=os.environ.get("LLAMA_OUT_DIR", "logs"),
-    help="Directory for output summaries (default: ./logs). Can also be set via env var LLAMA_OUT_DIR.",
+    default=os.environ.get("LLAMA_OUT_DIR", "data/raw/summaries"),
+    help="Directory for raw summary outputs (default: data/raw/summaries).",
 )
 parser.add_argument("--ctx", type=int, default=4096, help="Context length (default: 4096).")
 parser.add_argument("--threads", type=int, default=os.cpu_count() or 1, help="Number of CPU threads (default: CPU count).")
@@ -272,6 +272,7 @@ write_summary(
 
 print("Finished run", RUN_ID, "MODE=", MODE)
 print("Wrote summary to", str(summary_path))
+
 
 
 
