@@ -27,5 +27,5 @@ This project implements a framework for measuring how forced tokens affect the o
    ```
 4. Install dependencies (CPU wheels)
    ```
-   
+   pip install -r requirements.txt --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu
    ```
