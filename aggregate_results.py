@@ -203,7 +203,9 @@ def parse_power_csv(path: Path) -> dict:
 
 def main():
     AGG_DIR.mkdir(parents=True, exist_ok=True)
-    LOGS_DIR.mkdir(parents=True, exist_ok=True)
+    SUMMARY_DIR.mkdir(parents=True, exist_ok=True)
+    POWER_DIR.mkdir(parents=True, exist_ok=True)
+
 
     # ---- NEW: load idle baseline ----
     idle_path = POWER_DIR / "idle.csv"
@@ -298,6 +300,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
