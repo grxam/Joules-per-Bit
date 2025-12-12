@@ -46,8 +46,13 @@ import re
 from pathlib import Path
 from statistics import mean
 
-LOGS_DIR = Path("logs")
-OUTPUT_CSV = LOGS_DIR / "aggregate_results.csv"
+RAW_DIR = Path("data/raw")
+SUMMARY_DIR = RAW_DIR / "summaries"
+POWER_DIR = RAW_DIR / "power"
+
+AGG_DIR = Path("data/aggregate")
+OUTPUT_CSV = AGG_DIR / "aggregate_results.csv"
+
 
 SUMMARY_RE = re.compile(r"^summary_(?P<run_id>.+?)_(?P<mode>A2B|B2A|BOTH)\.csv$")
 POWER_RE   = re.compile(r"^run_(?P<run_id>.+?)_(?P<mode>A2B|B2A|BOTH)\.csv$")
@@ -291,6 +296,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
